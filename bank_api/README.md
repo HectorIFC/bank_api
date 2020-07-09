@@ -17,3 +17,27 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
   * Docs: https://hexdocs.pm/phoenix
   * Forum: https://elixirforum.com/c/phoenix-forum
   * Source: https://github.com/phoenixframework/phoenix
+
+# Database config:
+
+docker network create --driver bridge db_bank_api
+
+docker run --name db_bank_api \ \
+--network=db_bank_api \ \
+-e POSTGRES_PASSWORD=postgres \ \
+-p 5432:5432 \ \
+-v $HOME/docker/volumes/postgres:/var/lib/postgresql/data \ \
+-d postgres;
+
+## Download dependencies and migrate database:
+
+mix ecto.setup
+
+docker logs -f db_bank_api;
+
+## Run sevice:
+mix phx.server
+
+## Connect to postgres instance:
+
+docker exec -it db_bank_api psql -U postgres;
